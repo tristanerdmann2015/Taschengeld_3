@@ -48,9 +48,13 @@
             </Grid>
         </Grid>
 
+
         <!-- Row 2: Task List -->
-        <ScrollView Grid.Row="2">
-            <CollectionView x:Name="tasksCollection" ItemsSource="{Binding Tasks}" SelectionMode="Single">
+        <ScrollView Grid.Row="2" VerticalScrollBarVisibility="Always">
+            <CollectionView x:Name="tasksCollection" ItemsSource="{Binding Tasks}" SelectionMode="Single" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+                <CollectionView.ItemsLayout>
+                    <LinearItemsLayout Orientation="Vertical" ItemSpacing="6" />
+                </CollectionView.ItemsLayout>
                 <CollectionView.EmptyView>
                     <VerticalStackLayout Padding="20" Spacing="10" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand">
                         <Label Text="Keine Aufgaben vorhanden" FontSize="16" FontAttributes="Bold" TextColor="Gray" HorizontalTextAlignment="Center"/>
@@ -58,24 +62,34 @@
                 </CollectionView.EmptyView>
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <Frame BorderColor="#E0E0E0" Padding="8" Margin="0,3" CornerRadius="6" BackgroundColor="White" HasShadow="False">
-                            <Grid ColumnDefinitions="*,Auto">
-                                <VerticalStackLayout Grid.Column="0" Spacing="2">
-                                    <Label Text="{Binding Name}" FontSize="11" FontAttributes="Bold" TextColor="Black" LineBreakMode="TailTruncation"/>
-                                    <StackLayout Orientation="Horizontal" Spacing="12">
-                                        <Label Text="{Binding Price, StringFormat='Preis: {0:C}'}" FontSize="9" TextColor="Gray"/>
-                                        <Label Text="{Binding BillingType, Converter={StaticResource BillingTypeConverter}}" FontSize="9" TextColor="Gray"/>
-                                    </StackLayout>
-                                </VerticalStackLayout>
-                                <StackLayout Grid.Column="1" Spacing="3" Orientation="Horizontal" VerticalOptions="Center">
-                                    <Button Text="Bearbeiten" Clicked="OnSwipeEdit" CommandParameter="{Binding .}" BackgroundColor="#2196F3" TextColor="White" Padding="6" FontSize="10"/>
-                                    <Button Text="Loeschen" Clicked="OnSwipeDelete" CommandParameter="{Binding .}" BackgroundColor="#FF6B6B" TextColor="White" Padding="6" FontSize="10"/>
-                                </StackLayout>
-                            </Grid>
-                        </Frame>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
+                        <SwipeView>
+                            <SwipeView.LeftItems>
+                                <SwipeItems Mode="Reveal">
+                                    <SwipeItem Text="Bearbeiten" Invoked="OnSwipeEdit" CommandParameter="{Binding .}" BackgroundColor="#2196F3" />
+                                </SwipeItems>
+                            </SwipeView.LeftItems>
+                            <SwipeView.RightItems>
+                                <SwipeItems Mode="Reveal">
+                                <SwipeItem Text="Loeschen" Invoked="OnSwipeDelete" CommandParameter="{Binding .}" BackgroundColor="#FF6B6B" />
+                            </SwipeItems>
+                        </SwipeView.RightItems>
+                        <SwipeView.Content>
+                            <Frame BorderColor="#B0BEC5" Padding="12" Margin="0,6" CornerRadius="10" BackgroundColor="#FAFAFA" HasShadow="True">
+                                <Grid ColumnDefinitions="*">
+                                    <VerticalStackLayout Spacing="2">
+                                        <Label Text="{Binding Name}" FontSize="14" FontAttributes="Bold" TextColor="#263238" LineBreakMode="TailTruncation"/>
+                                        <StackLayout Orientation="Horizontal" Spacing="16">
+                                            <Label Text="{Binding Price, StringFormat='Preis: {0:C}'}" FontSize="12" TextColor="#546E7A"/>
+                                            <Label Text="{Binding BillingType, Converter={StaticResource BillingTypeConverter}}" FontSize="12" TextColor="#546E7A"/>
+                                        </StackLayout>
+                                    </VerticalStackLayout>
+                                </Grid>
+                            </Frame>
+                        </SwipeView.Content>
+                    </SwipeView>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
         </ScrollView>
     </Grid>
 

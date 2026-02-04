@@ -53,60 +53,68 @@ public partial class TimeEntryPage : ContentPage
         }
     }
 
-    private async void OnEditEntry(object sender, EventArgs e)
+    private void OnSwipeEdit(object sender, EventArgs e)
     {
         try
         {
-            if (sender is Button button && button.CommandParameter is int entryId)
+            TimeEntry? entry = null;
+            
+            if (sender is SwipeItem swipeItem)
             {
-                var entry = _viewModel!.TimeEntries.FirstOrDefault(e => e.Id == entryId);
-                if (entry != null)
+                entry = swipeItem.CommandParameter as TimeEntry;
+            }
+            
+            if (entry != null)
+            {
+                // Reload the task data to ensure Task property is populated
+                var task = _viewModel!.AvailableTasks.FirstOrDefault(t => t.Id == entry.TaskId);
+                if (task != null)
                 {
-                    // Reload the task data to ensure Task property is populated
-                    var task = _viewModel.AvailableTasks.FirstOrDefault(t => t.Id == entry.TaskId);
-                    if (task != null)
-                    {
-                        entry.Task = task;
-                    }
-                    
-                    _viewModel.SelectedEntry = entry;
-                    _viewModel.IsFormVisible = true;
-                    UpdateFieldVisibility();
+                    entry.Task = task;
                 }
+                
+                _viewModel!.SelectedEntry = entry;
+                _viewModel.IsFormVisible = true;
+                UpdateFieldVisibility();
+                System.Diagnostics.Debug.WriteLine($"OnSwipeEdit: Selected entry {entry.Id}");
             }
         }
         catch (Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine($"OnEditEntry Error: {ex.Message}");
+            System.Diagnostics.Debug.WriteLine($"OnSwipeEdit Error: {ex.Message}");
         }
     }
 
-    private async void OnDeleteEntry(object sender, EventArgs e)
+    private async void OnSwipeDelete(object sender, EventArgs e)
     {
         try
         {
-            if (sender is Button button && button.CommandParameter is int entryId)
+            TimeEntry? entry = null;
+            
+            if (sender is SwipeItem swipeItem)
             {
-                var entry = _viewModel!.TimeEntries.FirstOrDefault(e => e.Id == entryId);
-                if (entry != null)
+                entry = swipeItem.CommandParameter as TimeEntry;
+            }
+            
+            if (entry != null)
+            {
+                bool confirmed = await DisplayAlert("Bestaetigung", 
+                    "Moechten Sie diese Zeiteintragung wirklich loeschen?", 
+                    "Ja", "Nein");
+                
+                if (confirmed)
                 {
-                    bool confirmed = await DisplayAlert("Bestätigung", 
-                        $"Möchten Sie diese Zeiteintragung wirklich löschen?", 
-                        "Ja", "Nein");
-                    
-                    if (confirmed)
-                    {
-                        _viewModel.SelectedEntry = entry;
-                        await _viewModel.DeleteEntry();
-                        _viewModel.IsFormVisible = false;
-                    }
+                    _viewModel!.SelectedEntry = entry;
+                    await _viewModel.DeleteEntry();
+                    _viewModel.IsFormVisible = false;
+                    System.Diagnostics.Debug.WriteLine($"OnSwipeDelete: Deleted entry {entry.Id}");
                 }
             }
         }
         catch (Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine($"OnDeleteEntry Error: {ex.Message}");
-            await DisplayAlert("Fehler", $"Fehler beim Löschen: {ex.Message}", "OK");
+            System.Diagnostics.Debug.WriteLine($"OnSwipeDelete Error: {ex.Message}");
+            await DisplayAlert("Fehler", $"Fehler beim Loeschen: {ex.Message}", "OK");
         }
     }
 

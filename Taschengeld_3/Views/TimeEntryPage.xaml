@@ -93,26 +93,36 @@
                 </CollectionView.EmptyView>
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <Frame BorderColor="#E0E0E0" Padding="8" Margin="0,3" CornerRadius="6" BackgroundColor="White" HasShadow="False">
-                            <Grid ColumnDefinitions="*,Auto">
-                                <VerticalStackLayout Grid.Column="0" Spacing="2">
-                                    <Label Text="{Binding Task.Name, FallbackValue='Aufgabe nicht gefunden'}" FontSize="12" FontAttributes="Bold" TextColor="Black"/>
-                                    <StackLayout Orientation="Horizontal" Spacing="8">
-                                        <Label Text="{Binding EntryDate, StringFormat='{0:dd.MM.yyyy}'}" FontSize="10" TextColor="Gray"/>
-                                        <Label Text="{Binding StartTime, StringFormat='{0:hh\\:mm}'}" FontSize="10" TextColor="Gray"/>
-                                    </StackLayout>
-                                    <StackLayout Orientation="Horizontal" Spacing="15">
-                                        <Label Text="{Binding DurationInHours, StringFormat='Dauer: {0:F1}h'}" FontSize="10" TextColor="Gray"/>
-                                        <Label Text="{Binding Count, StringFormat='Anzahl: {0}'}" FontSize="10" TextColor="Gray"/>
-                                        <Label Text="{Binding TotalPrice, StringFormat='Preis: {0:C}'}" FontSize="10" FontAttributes="Bold" TextColor="#4CAF50"/>
-                                    </StackLayout>
-                                </VerticalStackLayout>
-                                <StackLayout Grid.Column="1" Spacing="3" Orientation="Horizontal" VerticalOptions="Center">
-                                    <Button Text="Edit" Clicked="OnEditEntry" CommandParameter="{Binding Id}" BackgroundColor="#2196F3" TextColor="White" Padding="6" FontSize="10"/>
-                                    <Button Text="Del" Clicked="OnDeleteEntry" CommandParameter="{Binding Id}" BackgroundColor="#FF6B6B" TextColor="White" Padding="6" FontSize="10"/>
-                                </StackLayout>
-                            </Grid>
-                        </Frame>
+                        <SwipeView>
+                            <SwipeView.LeftItems>
+                                <SwipeItems Mode="Reveal">
+                                    <SwipeItem Text="Bearbeiten" Invoked="OnSwipeEdit" CommandParameter="{Binding .}" BackgroundColor="#2196F3" />
+                                </SwipeItems>
+                            </SwipeView.LeftItems>
+                            <SwipeView.RightItems>
+                                <SwipeItems Mode="Reveal">
+                                    <SwipeItem Text="Loeschen" Invoked="OnSwipeDelete" CommandParameter="{Binding .}" BackgroundColor="#FF6B6B" />
+                                </SwipeItems>
+                            </SwipeView.RightItems>
+                            <SwipeView.Content>
+                                <Frame BorderColor="#B0BEC5" Padding="12" Margin="0,6" CornerRadius="10" BackgroundColor="#FAFAFA" HasShadow="True">
+                                    <Grid ColumnDefinitions="*">
+                                        <VerticalStackLayout Spacing="4">
+                                            <Label Text="{Binding Task.Name, FallbackValue='Aufgabe nicht gefunden'}" FontSize="14" FontAttributes="Bold" TextColor="#263238"/>
+                                            <StackLayout Orientation="Horizontal" Spacing="12">
+                                                <Label Text="{Binding EntryDate, StringFormat='{0:dd.MM.yyyy}'}" FontSize="12" TextColor="#546E7A"/>
+                                                <Label Text="{Binding StartTime, StringFormat='{0:hh\\:mm}'}" FontSize="12" TextColor="#546E7A"/>
+                                            </StackLayout>
+                                            <StackLayout Orientation="Horizontal" Spacing="16">
+                                                <Label Text="{Binding DurationInHours, StringFormat='Dauer: {0:F1}h'}" FontSize="12" TextColor="#546E7A"/>
+                                                <Label Text="{Binding Count, StringFormat='Anzahl: {0}'}" FontSize="12" TextColor="#546E7A"/>
+                                                <Label Text="{Binding TotalPrice, StringFormat='Preis: {0:C}'}" FontSize="12" FontAttributes="Bold" TextColor="#4CAF50"/>
+                                            </StackLayout>
+                                        </VerticalStackLayout>
+                                    </Grid>
+                                </Frame>
+                            </SwipeView.Content>
+                        </SwipeView>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
