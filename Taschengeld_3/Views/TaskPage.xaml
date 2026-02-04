@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:Taschengeld_3.Converters"
+             x:Class="Taschengeld_3.Views.TaskPage"
+             Title="Aufgaben">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <local:BillingTypeConverter x:Key="BillingTypeConverter"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <Grid RowDefinitions="Auto,Auto,*" Padding="10" RowSpacing="10">
+        <!-- Row 0: New Task Button -->
+        <Button Grid.Row="0" Text="+ Neue Aufgabe" Clicked="OnNewTask" BackgroundColor="#4CAF50" TextColor="White" Padding="15,10" FontSize="14" FontAttributes="Bold"/>
+        
+        <!-- Row 1: Form (only visible when IsFormVisible is true) -->
+        <Grid Grid.Row="1" IsVisible="{Binding IsFormVisible}" RowDefinitions="*,Auto" RowSpacing="8" Padding="10" BackgroundColor="#F5F5F5" MinimumHeightRequest="240">
+            
+            <!-- Scrollable form content -->
+            <ScrollView Grid.Row="0" VerticalScrollBarVisibility="Always" MinimumHeightRequest="200">
+                <VerticalStackLayout Spacing="8">
+                    <Label x:Name="FormLabel" Text="Neue Aufgabe" FontSize="14" FontAttributes="Bold"/>
+                    
+                    <Grid ColumnDefinitions="80,*" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="10" RowSpacing="8">
+                        <Label Grid.Row="0" Grid.Column="0" Text="Name:" FontSize="11" FontAttributes="Bold" VerticalOptions="Center"/>
+                        <Entry Grid.Row="0" Grid.Column="1" Placeholder="z.B. Rasen maehen" Text="{Binding TaskName}" PlaceholderColor="LightGray"/>
+                        
+                        <Label Grid.Row="1" Grid.Column="0" Text="Preis:" FontSize="11" FontAttributes="Bold" VerticalOptions="Center"/>
+                        <Entry Grid.Row="1" Grid.Column="1" Placeholder="z.B. 10,50" Text="{Binding TaskPrice}" Keyboard="Numeric" PlaceholderColor="LightGray"/>
+                        
+                        <Label Grid.Row="2" Grid.Column="0" Text="Abrechnung:" FontSize="11" FontAttributes="Bold" VerticalOptions="Center"/>
+                        <Picker Grid.Row="2" Grid.Column="1" x:Name="BillingPicker">
+                            <Picker.Items>
+                                <x:String>Pro Stunde</x:String>
+                                <x:String>Pro Anzahl</x:String>
+                            </Picker.Items>
+                        </Picker>
+                    </Grid>
+                </VerticalStackLayout>
+            </ScrollView>
+            
+            <!-- Buttons always visible at bottom -->
+            <Grid Grid.Row="1" ColumnDefinitions="*,*" ColumnSpacing="10" MinimumHeightRequest="50">
+                <Button Text="Speichern" Clicked="OnSaveTask" BackgroundColor="#4CAF50" TextColor="White" FontAttributes="Bold" Padding="10"/>
+                <Button Grid.Column="1" Text="Abbrechen" Clicked="OnClear" BackgroundColor="#9E9E9E" TextColor="White" FontAttributes="Bold" Padding="10"/>
+            </Grid>
+        </Grid>
+
+        <!-- Row 2: Task List -->
+        <ScrollView Grid.Row="2">
+            <CollectionView x:Name="tasksCollection" ItemsSource="{Binding Tasks}" SelectionMode="Single">
+                <CollectionView.EmptyView>
+                    <VerticalStackLayout Padding="20" Spacing="10" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand">
+                        <Label Text="Keine Aufgaben vorhanden" FontSize="16" FontAttributes="Bold" TextColor="Gray" HorizontalTextAlignment="Center"/>
+                    </VerticalStackLayout>
+                </CollectionView.EmptyView>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Frame BorderColor="#E0E0E0" Padding="8" Margin="0,3" CornerRadius="6" BackgroundColor="White" HasShadow="False">
+                            <Grid ColumnDefinitions="*,Auto">
+                                <VerticalStackLayout Grid.Column="0" Spacing="2">
+                                    <Label Text="{Binding Name}" FontSize="11" FontAttributes="Bold" TextColor="Black" LineBreakMode="TailTruncation"/>
+                                    <StackLayout Orientation="Horizontal" Spacing="12">
+                                        <Label Text="{Binding Price, StringFormat='Preis: {0:C}'}" FontSize="9" TextColor="Gray"/>
+                                        <Label Text="{Binding BillingType, Converter={StaticResource BillingTypeConverter}}" FontSize="9" TextColor="Gray"/>
+                                    </StackLayout>
+                                </VerticalStackLayout>
+                                <StackLayout Grid.Column="1" Spacing="3" Orientation="Horizontal" VerticalOptions="Center">
+                                    <Button Text="Bearbeiten" Clicked="OnSwipeEdit" CommandParameter="{Binding .}" BackgroundColor="#2196F3" TextColor="White" Padding="6" FontSize="10"/>
+                                    <Button Text="Loeschen" Clicked="OnSwipeDelete" CommandParameter="{Binding .}" BackgroundColor="#FF6B6B" TextColor="White" Padding="6" FontSize="10"/>
+                                </StackLayout>
+                            </Grid>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </ScrollView>
+    </Grid>
+
+</ContentPage>
