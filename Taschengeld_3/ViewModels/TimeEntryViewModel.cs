@@ -17,6 +17,8 @@ public class TimeEntryViewModel : INotifyPropertyChanged
     private TimeSpan _startTime = new(12, 0, 0);
     private double _durationInHours = 1;
     private int _count = 1;
+    private string _durationInHoursText = "1,00";
+    private string _countText = "1";
     private DateTime _filterStartDate = DateTime.Now.AddMonths(-3);
     private DateTime _filterEndDate = DateTime.Now;
     private bool _isFormVisible = false;
@@ -66,8 +68,16 @@ public class TimeEntryViewModel : INotifyPropertyChanged
         {
             _selectedTask = value;
             OnPropertyChanged();
+            OnPropertyChanged(nameof(IsTaskSelected));
+            OnPropertyChanged(nameof(TaskSelectionHint));
         }
     }
+
+    // Zeigt an ob eine Aufgabe ausgewählt wurde
+    public bool IsTaskSelected => _selectedTask != null;
+
+    // Zeigt "- Bitte auswählen" wenn keine Aufgabe ausgewählt
+    public string TaskSelectionHint => _selectedTask == null ? " - Bitte auswählen" : "";
 
     public DateTime EntryDate
     {
@@ -95,7 +105,30 @@ public class TimeEntryViewModel : INotifyPropertyChanged
         set
         {
             _durationInHours = value;
+            _durationInHoursText = value.ToString("F2").Replace('.', ',');
             OnPropertyChanged();
+            OnPropertyChanged(nameof(DurationInHoursText));
+        }
+    }
+
+    // String-Wrapper für DurationInHours - erlaubt Backspace und Komma-Eingabe
+    public string DurationInHoursText
+    {
+        get => _durationInHoursText;
+        set
+        {
+            _durationInHoursText = value;
+            OnPropertyChanged();
+            
+            if (!string.IsNullOrWhiteSpace(value))
+            {
+                var normalizedValue = value.Replace(',', '.');
+                if (double.TryParse(normalizedValue, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out double result))
+                {
+                    _durationInHours = result;
+                    OnPropertyChanged(nameof(DurationInHours));
+                }
+            }
         }
     }
 
@@ -105,7 +138,29 @@ public class TimeEntryViewModel : INotifyPropertyChanged
         set
         {
             _count = value;
+            _countText = value.ToString();
             OnPropertyChanged();
+            OnPropertyChanged(nameof(CountText));
+        }
+    }
+
+    // String-Wrapper für Count - erlaubt Backspace
+    public string CountText
+    {
+        get => _countText;
+        set
+        {
+            _countText = value;
+            OnPropertyChanged();
+            
+            if (!string.IsNullOrWhiteSpace(value))
+            {
+                if (int.TryParse(value, out int result))
+                {
+                    _count = result;
+                    OnPropertyChanged(nameof(Count));
+                }
+            }
         }
     }
 

@@ -49,26 +49,38 @@
         <CollectionView Grid.Row="1" ItemsSource="{Binding CostSummaries}">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <Frame BorderColor="#E0E0E0" Padding="8" Margin="0,2" CornerRadius="8" BackgroundColor="White" HasShadow="False">
-                        <VerticalStackLayout Spacing="3">
-                            <Label Text="{Binding Period}" FontSize="13" FontAttributes="Bold" TextColor="Black"/>
-                            <StackLayout Orientation="Horizontal" Spacing="15">
-                                <Label Text="{Binding TotalCost, StringFormat='Verdienst: {0:C}'}" FontSize="11" TextColor="#4CAF50" FontAttributes="Bold"/>
-                                <Label Text="{Binding EntryCount, StringFormat='Eintraege: {0}'}" FontSize="11" TextColor="Gray"/>
-                            </StackLayout>
-                            
-                            <CollectionView ItemsSource="{Binding TaskCosts}" SelectionMode="None">
-                                <CollectionView.ItemTemplate>
-                                    <DataTemplate>
-                                        <Grid ColumnDefinitions="*,Auto" Padding="0" RowSpacing="0">
-                                            <Label Grid.Column="0" Text="{Binding TaskName}" FontSize="10" TextColor="Gray"/>
-                                            <Label Grid.Column="1" Text="{Binding Cost, StringFormat='{0:C}'}" FontSize="10" FontAttributes="Bold" TextColor="Gray"/>
-                                        </Grid>
-                                    </DataTemplate>
-                                </CollectionView.ItemTemplate>
-                            </CollectionView>
-                        </VerticalStackLayout>
-                    </Frame>
+                    <SwipeView>
+                        <SwipeView.RightItems>
+                            <SwipeItems Mode="Reveal">
+                                <SwipeItem Text="Teilen" 
+                                           IconImageSource="share.png"
+                                           Invoked="OnShareEntry" 
+                                           CommandParameter="{Binding .}" 
+                                           BackgroundColor="#2196F3"/>
+                            </SwipeItems>
+                        </SwipeView.RightItems>
+                        
+                        <Frame BorderColor="#E0E0E0" Padding="8" Margin="0,2" CornerRadius="8" BackgroundColor="White" HasShadow="False">
+                            <VerticalStackLayout Spacing="3">
+                                <Label Text="{Binding Period}" FontSize="13" FontAttributes="Bold" TextColor="Black"/>
+                                <StackLayout Orientation="Horizontal" Spacing="15">
+                                    <Label Text="{Binding TotalCost, StringFormat='Verdienst: {0:C}'}" FontSize="11" TextColor="#4CAF50" FontAttributes="Bold"/>
+                                    <Label Text="{Binding EntryCount, StringFormat='Eintraege: {0}'}" FontSize="11" TextColor="Gray"/>
+                                </StackLayout>
+                                
+                                <CollectionView ItemsSource="{Binding TaskCosts}" SelectionMode="None">
+                                    <CollectionView.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid ColumnDefinitions="*,Auto" Padding="0" RowSpacing="0">
+                                                <Label Grid.Column="0" Text="{Binding TaskName}" FontSize="10" TextColor="Gray"/>
+                                                <Label Grid.Column="1" Text="{Binding Cost, StringFormat='{0:C}'}" FontSize="10" FontAttributes="Bold" TextColor="Gray"/>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </CollectionView.ItemTemplate>
+                                </CollectionView>
+                            </VerticalStackLayout>
+                        </Frame>
+                    </SwipeView>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>

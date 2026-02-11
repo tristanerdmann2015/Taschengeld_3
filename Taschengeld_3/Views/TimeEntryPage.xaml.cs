@@ -154,12 +154,20 @@ public partial class TimeEntryPage : ContentPage
 
     private void UpdateFieldVisibility()
     {
-        if (_viewModel?.SelectedTask?.BillingType == BillingType.PerHour)
+        // Nur anzeigen wenn eine Aufgabe ausgewählt ist
+        if (_viewModel?.SelectedTask == null)
+        {
+            DurationSection.IsVisible = false;
+            CountSection.IsVisible = false;
+            return;
+        }
+
+        if (_viewModel.SelectedTask.BillingType == BillingType.PerHour)
         {
             DurationSection.IsVisible = true;
             CountSection.IsVisible = false;
         }
-        else if (_viewModel?.SelectedTask?.BillingType == BillingType.PerCount)
+        else if (_viewModel.SelectedTask.BillingType == BillingType.PerCount)
         {
             DurationSection.IsVisible = false;
             CountSection.IsVisible = true;
