@@ -1,4 +1,5 @@
-﻿using Taschengeld_3.Views;
+﻿using Taschengeld_3.Behaviors;
+using Taschengeld_3.Views;
 
 namespace Taschengeld_3
 {
@@ -11,6 +12,30 @@ namespace Taschengeld_3
             System.Diagnostics.Debug.WriteLine("MainPage: InitializeComponent completed");
             LoadPages();
             System.Diagnostics.Debug.WriteLine("MainPage: LoadPages completed");
+            
+            // Haptisches Feedback bei Tab-Wechsel
+            this.CurrentPageChanged += OnCurrentPageChanged;
+        }
+
+        private void OnCurrentPageChanged(object? sender, EventArgs e)
+        {
+            // Haptisches Feedback bei jedem Tab-Wechsel - direkte Ausfuehrung
+            try
+            {
+                if (HapticFeedback.Default.IsSupported)
+                {
+                    HapticFeedback.Default.Perform(HapticFeedbackType.Click);
+                }
+                else if (Vibration.Default.IsSupported)
+                {
+                    Vibration.Default.Vibrate(TimeSpan.FromMilliseconds(30));
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"MainPage: Haptic failed: {ex.Message}");
+            }
+            System.Diagnostics.Debug.WriteLine($"MainPage: Tab changed to {CurrentPage?.Title}");
         }
 
         private void LoadPages()
@@ -59,7 +84,7 @@ namespace Taschengeld_3
                 System.Diagnostics.Debug.WriteLine($"MainPage.LoadPages: StackTrace: {ex.StackTrace}");
                 MainThread.BeginInvokeOnMainThread(async () =>
                 {
-                    await DisplayAlert("Fehler beim Laden der Seiten", ex.Message + "\n\n" + ex.StackTrace, "OK");
+                    await DisplayAlertAsync("Fehler beim Laden der Seiten", ex.Message + "\n\n" + ex.StackTrace, "OK");
                 });
             }
         }

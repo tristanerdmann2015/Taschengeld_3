@@ -1,29 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 540 720">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
   <defs>
-    <linearGradient id="grad1" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" style="stop-color:#2ecc71;stop-opacity:1"/>
-      <stop offset="100%" style="stop-color:#27ae60;stop-opacity:1"/>
+    <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#512BD4;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#7B1FA2;stop-opacity:1"/>
+    </linearGradient>
+    <linearGradient id="coinGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FFD700;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#FFC107;stop-opacity:1"/>
     </linearGradient>
   </defs>
-
-  <rect width="540" height="720" fill="url(#grad1)"/>
-
-  <circle cx="270" cy="150" r="70" fill="#f1c40f" stroke="#d4af37" stroke-width="3"/>
-  <circle cx="270" cy="150" r="60" fill="none" stroke="#8b5a00" stroke-width="2"/>
-  <circle cx="270" cy="150" r="55" fill="none" stroke="#d4af37" stroke-width="1"/>
-
-  <path d="M 80 280 Q 80 230 130 230 L 410 230 Q 460 230 460 280 L 460 420 Q 460 470 410 490 L 270 530 L 130 490 Q 80 470 80 420 Z" fill="#c17d11" stroke="#8b5a00" stroke-width="4"/>
-  <rect x="110" y="225" width="320" height="20" fill="#8b5a00" rx="3"/>
-
-  <circle cx="180" cy="360" r="25" fill="#f1c40f" stroke="#d4af37" stroke-width="2"/>
-  <circle cx="180" cy="360" r="20" fill="none" stroke="#8b5a00" stroke-width="1.5"/>
-
-  <circle cx="270" cy="340" r="25" fill="#f1c40f" stroke="#d4af37" stroke-width="2"/>
-  <circle cx="270" cy="340" r="20" fill="none" stroke="#8b5a00" stroke-width="1.5"/>
-
-  <circle cx="360" cy="360" r="25" fill="#f1c40f" stroke="#d4af37" stroke-width="2"/>
-  <circle cx="360" cy="360" r="20" fill="none" stroke="#8b5a00" stroke-width="1.5"/>
-
-  <text x="270" y="600" text-anchor="middle" font-size="48" fill="white" font-weight="bold" font-family="Arial, sans-serif">Taschengeld</text>
+  
+  <!-- Hintergrund -->
+  <rect width="512" height="512" fill="url(#grad1)"/>
+  
+  <!-- Muenze -->
+  <circle cx="256" cy="256" r="140" fill="url(#coinGrad)" stroke="#B8860B" stroke-width="6"/>
+  <circle cx="256" cy="256" r="115" fill="none" stroke="#DAA520" stroke-width="3"/>
+  
+  <!-- Dollar-Zeichen -->
+  <path d="M 245 130 L 267 130 L 267 160 
+           C 305 165 335 190 335 230 
+           C 335 270 305 295 267 305 
+           L 267 320 
+           C 295 325 320 345 330 375 
+           L 300 395 
+           C 290 370 270 358 267 356 
+           L 267 385 L 245 385 L 245 356 
+           C 205 350 175 320 175 275 
+           C 175 235 205 210 245 200 
+           L 245 180 
+           C 215 183 195 200 185 220 
+           L 155 200 
+           C 175 165 205 150 245 145 
+           Z" 
+        fill="#512BD4"/>
+  
+  <!-- Glanzeffekt -->
+  <ellipse cx="210" cy="180" rx="40" ry="20" fill="white" opacity="0.3"/>
 </svg>

@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:Taschengeld_3.Converters"
+             xmlns:behaviors="clr-namespace:Taschengeld_3.Behaviors"
              x:Class="Taschengeld_3.Views.TaskPage"
              Title="Aufgaben">
 
@@ -25,13 +26,24 @@
                     
                     <Grid ColumnDefinitions="80,*" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="10" RowSpacing="8">
                         <Label Grid.Row="0" Grid.Column="0" Text="Name:" FontSize="11" FontAttributes="Bold" VerticalOptions="Center"/>
-                        <Entry Grid.Row="0" Grid.Column="1" Placeholder="z.B. Rasen maehen" Text="{Binding TaskName}" PlaceholderColor="LightGray"/>
+                        <Entry Grid.Row="0" Grid.Column="1" Placeholder="z.B. Rasen maehen" Text="{Binding TaskName}" PlaceholderColor="LightGray">
+                            <Entry.Behaviors>
+                                <behaviors:EntryHapticBehavior/>
+                            </Entry.Behaviors>
+                        </Entry>
                         
                         <Label Grid.Row="1" Grid.Column="0" Text="Preis:" FontSize="11" FontAttributes="Bold" VerticalOptions="Center"/>
-                        <Entry Grid.Row="1" Grid.Column="1" Placeholder="z.B. 10,50" Text="{Binding TaskPrice}" Keyboard="Numeric" PlaceholderColor="LightGray"/>
+                        <Entry Grid.Row="1" Grid.Column="1" Placeholder="z.B. 10,50" Text="{Binding TaskPrice}" Keyboard="Numeric" PlaceholderColor="LightGray">
+                            <Entry.Behaviors>
+                                <behaviors:EntryHapticBehavior/>
+                            </Entry.Behaviors>
+                        </Entry>
                         
                         <Label Grid.Row="2" Grid.Column="0" Text="Abrechnung:" FontSize="11" FontAttributes="Bold" VerticalOptions="Center"/>
                         <Picker Grid.Row="2" Grid.Column="1" x:Name="BillingPicker">
+                            <Picker.Behaviors>
+                                <behaviors:PickerHapticBehavior/>
+                            </Picker.Behaviors>
                             <Picker.Items>
                                 <x:String>Pro Stunde</x:String>
                                 <x:String>Pro Anzahl</x:String>
@@ -44,16 +56,17 @@
             <!-- Buttons always visible at bottom -->
             <Grid Grid.Row="1" ColumnDefinitions="*,*" ColumnSpacing="10" MinimumHeightRequest="50">
                 <Button Text="Speichern" Clicked="OnSaveTask" BackgroundColor="#4CAF50" TextColor="White" FontAttributes="Bold" Padding="10"/>
-                <Button Grid.Column="1" Text="Abbrechen" Clicked="OnClear" BackgroundColor="#9E9E9E" TextColor="White" FontAttributes="Bold" Padding="10"/>
+                <Button Grid.Column="1" Text="Abbrechen" Clicked="OnClear" BackgroundColor="#E53935" TextColor="White" FontAttributes="Bold" Padding="10"/>
             </Grid>
         </Grid>
+
 
 
         <!-- Row 2: Task List -->
         <ScrollView Grid.Row="2" VerticalScrollBarVisibility="Always">
             <CollectionView x:Name="tasksCollection" ItemsSource="{Binding Tasks}" SelectionMode="Single" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
                 <CollectionView.ItemsLayout>
-                    <LinearItemsLayout Orientation="Vertical" ItemSpacing="6" />
+                    <LinearItemsLayout Orientation="Vertical" ItemSpacing="2" />
                 </CollectionView.ItemsLayout>
                 <CollectionView.EmptyView>
                     <VerticalStackLayout Padding="20" Spacing="10" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand">
@@ -62,33 +75,38 @@
                 </CollectionView.EmptyView>
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <SwipeView>
-                            <SwipeView.LeftItems>
-                                <SwipeItems Mode="Reveal">
-                                    <SwipeItem Text="Bearbeiten" Invoked="OnSwipeEdit" CommandParameter="{Binding .}" BackgroundColor="#2196F3" />
-                                </SwipeItems>
-                            </SwipeView.LeftItems>
-                            <SwipeView.RightItems>
-                                <SwipeItems Mode="Reveal">
-                                <SwipeItem Text="Loeschen" Invoked="OnSwipeDelete" CommandParameter="{Binding .}" BackgroundColor="#FF6B6B" />
-                            </SwipeItems>
-                        </SwipeView.RightItems>
-                        <SwipeView.Content>
-                            <Frame BorderColor="#B0BEC5" Padding="12" Margin="0,6" CornerRadius="10" BackgroundColor="#FAFAFA" HasShadow="True">
-                                <Grid ColumnDefinitions="*">
-                                    <VerticalStackLayout Spacing="2">
-                                        <Label Text="{Binding Name}" FontSize="14" FontAttributes="Bold" TextColor="#263238" LineBreakMode="TailTruncation"/>
-                                        <StackLayout Orientation="Horizontal" Spacing="16">
-                                            <Label Text="{Binding Price, StringFormat='Preis: {0:C}'}" FontSize="12" TextColor="#546E7A"/>
-                                            <Label Text="{Binding BillingType, Converter={StaticResource BillingTypeConverter}}" FontSize="12" TextColor="#546E7A"/>
-                                        </StackLayout>
-                                    </VerticalStackLayout>
-                                </Grid>
-                            </Frame>
-                        </SwipeView.Content>
-                    </SwipeView>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
+                        <Frame BorderColor="#B0BEC5" Padding="8" Margin="0,2" CornerRadius="8" BackgroundColor="#FAFAFA" HasShadow="True">
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                                <VerticalStackLayout Grid.Column="0" Spacing="1" VerticalOptions="Center">
+                                    <Label Text="{Binding Name}" FontSize="16" FontAttributes="Bold" TextColor="#263238" LineBreakMode="TailTruncation"/>
+                                    <StackLayout Orientation="Horizontal" Spacing="12">
+                                        <Label Text="{Binding Price, StringFormat='Preis: {0:C}'}" FontSize="14" TextColor="#546E7A"/>
+                                        <Label Text="{Binding BillingType, Converter={StaticResource BillingTypeConverter}}" FontSize="14" TextColor="#546E7A"/>
+                                    </StackLayout>
+                                </VerticalStackLayout>
+                                
+                                <HorizontalStackLayout Grid.Column="1" Spacing="6" VerticalOptions="Center">
+                                    <ImageButton Source="edit_icon.png"
+                                            Clicked="OnEditTask" 
+                                            CommandParameter="{Binding .}" 
+                                            BackgroundColor="#512BD4" 
+                                            WidthRequest="42" 
+                                            HeightRequest="38" 
+                                            Padding="8"
+                                            CornerRadius="8"/>
+                                    <ImageButton Source="delete_icon.png"
+                                            Clicked="OnDeleteTask" 
+                                            CommandParameter="{Binding .}" 
+                                            BackgroundColor="#E53935" 
+                                            WidthRequest="42" 
+                                            HeightRequest="38" 
+                                            Padding="8"
+                                            CornerRadius="8"/>
+                                </HorizontalStackLayout>
+                            </Grid>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
         </CollectionView>
         </ScrollView>
     </Grid>

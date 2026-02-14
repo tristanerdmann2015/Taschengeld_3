@@ -1,4 +1,5 @@
 using Taschengeld_3.Models;
+using Taschengeld_3.Services;
 using Taschengeld_3.ViewModels;
 
 namespace Taschengeld_3.Views;
@@ -6,11 +7,13 @@ namespace Taschengeld_3.Views;
 public partial class TimeEntryPage : ContentPage
 {
     private TimeEntryViewModel? _viewModel;
+    private SoundService? _soundService;
 
     public TimeEntryPage()
     {
         InitializeComponent();
         _viewModel = ServiceHelper.GetService<TimeEntryViewModel>();
+        _soundService = ServiceHelper.GetService<SoundService>();
         BindingContext = _viewModel;
     }
 
@@ -29,16 +32,18 @@ public partial class TimeEntryPage : ContentPage
                 catch (Exception ex)
                 {
                     System.Diagnostics.Debug.WriteLine($"TimeEntryPage.OnAppearing Error: {ex.Message}");
-                    await DisplayAlert("Fehler beim Laden", $"{ex.GetType().Name}: {ex.Message}", "OK");
+                    await DisplayAlertAsync("Fehler beim Laden", $"{ex.GetType().Name}: {ex.Message}", "OK");
                 }
             });
         }
     }
 
-    private void OnNewEntry(object sender, EventArgs e)
+    private async void OnNewEntry(object sender, EventArgs e)
     {
         if (_viewModel != null)
         {
+            await _soundService!.PlayClickSound();
+            
             _viewModel.ClearForm();
             _viewModel.IsFormVisible = true;
             UpdateFieldVisibility();
@@ -49,19 +54,26 @@ public partial class TimeEntryPage : ContentPage
     {
         if (_viewModel != null)
         {
+            await _soundService!.PlayClickSound();
             await _viewModel.ApplyFilter();
         }
     }
 
-    private void OnSwipeEdit(object sender, EventArgs e)
+    private async void OnEditEntry(object sender, EventArgs e)
     {
         try
         {
+            await _soundService!.PlayClickSound();
+            
             TimeEntry? entry = null;
             
-            if (sender is SwipeItem swipeItem)
+            if (sender is Button button)
             {
-                entry = swipeItem.CommandParameter as TimeEntry;
+                entry = button.CommandParameter as TimeEntry;
+            }
+            else if (sender is ImageButton imageButton)
+            {
+                entry = imageButton.CommandParameter as TimeEntry;
             }
             
             if (entry != null)
@@ -76,45 +88,50 @@ public partial class TimeEntryPage : ContentPage
                 _viewModel!.SelectedEntry = entry;
                 _viewModel.IsFormVisible = true;
                 UpdateFieldVisibility();
-                System.Diagnostics.Debug.WriteLine($"OnSwipeEdit: Selected entry {entry.Id}");
+                System.Diagnostics.Debug.WriteLine($"OnEditEntry: Selected entry {entry.Id}");
             }
         }
         catch (Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine($"OnSwipeEdit Error: {ex.Message}");
+            System.Diagnostics.Debug.WriteLine($"OnEditEntry Error: {ex.Message}");
         }
     }
 
-    private async void OnSwipeDelete(object sender, EventArgs e)
+    private async void OnDeleteEntry(object sender, EventArgs e)
     {
         try
         {
             TimeEntry? entry = null;
             
-            if (sender is SwipeItem swipeItem)
+            if (sender is Button button)
             {
-                entry = swipeItem.CommandParameter as TimeEntry;
+                entry = button.CommandParameter as TimeEntry;
+            }
+            else if (sender is ImageButton imageButton)
+            {
+                entry = imageButton.CommandParameter as TimeEntry;
             }
             
             if (entry != null)
             {
-                bool confirmed = await DisplayAlert("Bestaetigung", 
+                bool confirmed = await DisplayAlertAsync("Bestaetigung", 
                     "Moechten Sie diese Zeiteintragung wirklich loeschen?", 
                     "Ja", "Nein");
                 
                 if (confirmed)
                 {
+                    await _soundService!.PlayWarningSound();
                     _viewModel!.SelectedEntry = entry;
                     await _viewModel.DeleteEntry();
                     _viewModel.IsFormVisible = false;
-                    System.Diagnostics.Debug.WriteLine($"OnSwipeDelete: Deleted entry {entry.Id}");
+                    System.Diagnostics.Debug.WriteLine($"OnDeleteEntry: Deleted entry {entry.Id}");
                 }
             }
         }
         catch (Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine($"OnSwipeDelete Error: {ex.Message}");
-            await DisplayAlert("Fehler", $"Fehler beim Loeschen: {ex.Message}", "OK");
+            System.Diagnostics.Debug.WriteLine($"OnDeleteEntry Error: {ex.Message}");
+            await DisplayAlertAsync("Fehler", $"Fehler beim Loeschen: {ex.Message}", "OK");
         }
     }
 
@@ -123,20 +140,22 @@ public partial class TimeEntryPage : ContentPage
         try
         {
             await _viewModel!.SaveEntry();
+            await _soundService!.PlaySuccessSound();
             _viewModel.IsFormVisible = false;
             UpdateFieldVisibility();
         }
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"OnSaveEntry Error: {ex.Message}");
-            await DisplayAlert("Fehler", $"Fehler beim Speichern: {ex.Message}", "OK");
+            await DisplayAlertAsync("Fehler", $"Fehler beim Speichern: {ex.Message}", "OK");
         }
     }
 
-    private void OnClear(object sender, EventArgs e)
+    private async void OnClear(object sender, EventArgs e)
     {
         try
         {
+            await _soundService!.PlayWarningSound();
             _viewModel!.ClearForm();
             _viewModel.IsFormVisible = false;
             UpdateFieldVisibility();

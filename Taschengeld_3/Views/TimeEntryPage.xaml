@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:behaviors="clr-namespace:Taschengeld_3.Behaviors"
              x:Class="Taschengeld_3.Views.TimeEntryPage"
              Title="Zeiten"
              Padding="10">
@@ -37,7 +38,11 @@
                                 BackgroundColor="#E8EAF6"
                                 TextColor="Black"
                                 FontAttributes="Bold"
-                                HeightRequest="45"/>
+                                HeightRequest="45">
+                            <Picker.Behaviors>
+                                <behaviors:PickerHapticBehavior/>
+                            </Picker.Behaviors>
+                        </Picker>
                     </StackLayout>
 
                     <!-- Datum und Uhrzeit - nur sichtbar wenn Aufgabe ausgewählt -->
@@ -47,7 +52,11 @@
                             <DatePicker Date="{Binding EntryDate, Mode=TwoWay}" 
                                         BackgroundColor="#E8EAF6" 
                                         TextColor="Black"
-                                        HeightRequest="45"/>
+                                        HeightRequest="45">
+                                <DatePicker.Behaviors>
+                                    <behaviors:DatePickerHapticBehavior/>
+                                </DatePicker.Behaviors>
+                            </DatePicker>
                         </StackLayout>
                         
                         <StackLayout Grid.Column="1" Spacing="4">
@@ -55,7 +64,11 @@
                             <TimePicker Time="{Binding StartTime, Mode=TwoWay}" 
                                         BackgroundColor="#E8EAF6" 
                                         TextColor="Black"
-                                        HeightRequest="45"/>
+                                        HeightRequest="45">
+                                <TimePicker.Behaviors>
+                                    <behaviors:TimePickerHapticBehavior/>
+                                </TimePicker.Behaviors>
+                            </TimePicker>
                         </StackLayout>
                     </Grid>
 
@@ -69,7 +82,11 @@
                                BackgroundColor="#E8EAF6" 
                                TextColor="Black"
                                FontAttributes="Bold"
-                               HeightRequest="45"/>
+                               HeightRequest="45">
+                            <Entry.Behaviors>
+                                <behaviors:EntryHapticBehavior/>
+                            </Entry.Behaviors>
+                        </Entry>
                     </StackLayout>
 
                     <!-- Anzahl - nur sichtbar wenn Aufgabe ausgewählt -->
@@ -82,7 +99,11 @@
                                BackgroundColor="#E8EAF6" 
                                TextColor="Black"
                                FontAttributes="Bold"
-                               HeightRequest="45"/>
+                               HeightRequest="45">
+                            <Entry.Behaviors>
+                                <behaviors:EntryHapticBehavior/>
+                            </Entry.Behaviors>
+                        </Entry>
                     </StackLayout>
                 </StackLayout>
             </ScrollView>
@@ -109,7 +130,7 @@
                         <DatePicker Date="{Binding FilterEndDate}"/>
                     </StackLayout>
                 </Grid>
-                <Button Text="Filter anwenden" Clicked="OnApplyFilter" BackgroundColor="#2196F3" TextColor="White" Padding="8"/>
+                <Button Text="Filter anwenden" Clicked="OnApplyFilter" BackgroundColor="#2196F3" TextColor="White" Padding="8" FontAttributes="Bold"/>
             </StackLayout>
 
             <!-- Time Entries List -->
@@ -121,36 +142,41 @@
                 </CollectionView.EmptyView>
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <SwipeView>
-                            <SwipeView.LeftItems>
-                                <SwipeItems Mode="Reveal">
-                                    <SwipeItem Text="Bearbeiten" Invoked="OnSwipeEdit" CommandParameter="{Binding .}" BackgroundColor="#2196F3" />
-                                </SwipeItems>
-                            </SwipeView.LeftItems>
-                            <SwipeView.RightItems>
-                                <SwipeItems Mode="Reveal">
-                                    <SwipeItem Text="Loeschen" Invoked="OnSwipeDelete" CommandParameter="{Binding .}" BackgroundColor="#FF6B6B" />
-                                </SwipeItems>
-                            </SwipeView.RightItems>
-                            <SwipeView.Content>
-                                <Frame BorderColor="#B0BEC5" Padding="12" Margin="0,6" CornerRadius="10" BackgroundColor="#FAFAFA" HasShadow="True">
-                                    <Grid ColumnDefinitions="*">
-                                        <VerticalStackLayout Spacing="4">
-                                            <Label Text="{Binding Task.Name, FallbackValue='Aufgabe nicht gefunden'}" FontSize="14" FontAttributes="Bold" TextColor="#263238"/>
-                                            <StackLayout Orientation="Horizontal" Spacing="12">
-                                                <Label Text="{Binding EntryDate, StringFormat='{0:dd.MM.yyyy}'}" FontSize="12" TextColor="#546E7A"/>
-                                                <Label Text="{Binding StartTime, StringFormat='{0:hh\\:mm}'}" FontSize="12" TextColor="#546E7A"/>
-                                            </StackLayout>
-                                            <StackLayout Orientation="Horizontal" Spacing="16">
-                                                <Label Text="{Binding DurationInHours, StringFormat='Dauer: {0:F1}h'}" FontSize="12" TextColor="#546E7A"/>
-                                                <Label Text="{Binding Count, StringFormat='Anzahl: {0}'}" FontSize="12" TextColor="#546E7A"/>
-                                                <Label Text="{Binding TotalPrice, StringFormat='Preis: {0:C}'}" FontSize="12" FontAttributes="Bold" TextColor="#4CAF50"/>
-                                            </StackLayout>
-                                        </VerticalStackLayout>
-                                    </Grid>
-                                </Frame>
-                            </SwipeView.Content>
-                        </SwipeView>
+                        <Frame BorderColor="#B0BEC5" Padding="12" Margin="0,6" CornerRadius="10" BackgroundColor="#FAFAFA" HasShadow="True">
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                                <VerticalStackLayout Grid.Column="0" Spacing="4" VerticalOptions="Center">
+                                    <Label Text="{Binding Task.Name, FallbackValue='Aufgabe nicht gefunden'}" FontSize="14" FontAttributes="Bold" TextColor="#263238"/>
+                                    <StackLayout Orientation="Horizontal" Spacing="12">
+                                        <Label Text="{Binding EntryDate, StringFormat='{0:dd.MM.yyyy}'}" FontSize="12" TextColor="#546E7A"/>
+                                        <Label Text="{Binding StartTime, StringFormat='{0:hh\\:mm}'}" FontSize="12" TextColor="#546E7A"/>
+                                    </StackLayout>
+                                    <StackLayout Orientation="Horizontal" Spacing="16">
+                                        <Label Text="{Binding DurationInHours, StringFormat='Dauer: {0:F1}h'}" FontSize="12" TextColor="#546E7A"/>
+                                        <Label Text="{Binding Count, StringFormat='Anzahl: {0}'}" FontSize="12" TextColor="#546E7A"/>
+                                        <Label Text="{Binding TotalPrice, StringFormat='Preis: {0:C}'}" FontSize="12" FontAttributes="Bold" TextColor="#4CAF50"/>
+                                    </StackLayout>
+                                </VerticalStackLayout>
+                                
+                                <HorizontalStackLayout Grid.Column="1" Spacing="8" VerticalOptions="Center">
+                                    <ImageButton Source="edit_icon.png"
+                                            Clicked="OnEditEntry" 
+                                            CommandParameter="{Binding .}" 
+                                            BackgroundColor="#512BD4" 
+                                            WidthRequest="45" 
+                                            HeightRequest="40" 
+                                            Padding="8"
+                                            CornerRadius="8"/>
+                                    <ImageButton Source="delete_icon.png"
+                                            Clicked="OnDeleteEntry" 
+                                            CommandParameter="{Binding .}" 
+                                            BackgroundColor="#E53935" 
+                                            WidthRequest="45" 
+                                            HeightRequest="40" 
+                                            Padding="8"
+                                            CornerRadius="8"/>
+                                </HorizontalStackLayout>
+                            </Grid>
+                        </Frame>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>

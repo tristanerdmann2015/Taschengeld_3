@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Taschengeld_3.Views.SplashPage"
+             BackgroundColor="#512BD4"
+             Shell.NavBarIsVisible="False">
+
+    <Grid RowDefinitions="*,Auto,*" Padding="20">
+        
+        <!-- Rotierende Dollar-Muenze -->
+        <Grid Grid.Row="1" HorizontalOptions="Center" VerticalOptions="Center">
+            <!-- Muenze als Border statt Frame -->
+            <Border x:Name="CoinBorder"
+                    WidthRequest="280" 
+                    HeightRequest="280"
+                    BackgroundColor="#FFD700"
+                    Stroke="#B8860B"
+                    StrokeThickness="6"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center">
+                <Border.StrokeShape>
+                    <Ellipse />
+                </Border.StrokeShape>
+                <Grid>
+                    <!-- Innerer Ring -->
+                    <Border WidthRequest="240" 
+                            HeightRequest="240"
+                            BackgroundColor="Transparent"
+                            Stroke="#DAA520"
+                            StrokeThickness="3"
+                            HorizontalOptions="Center"
+                            VerticalOptions="Center">
+                        <Border.StrokeShape>
+                            <Ellipse />
+                        </Border.StrokeShape>
+                    </Border>
+                    
+                    <!-- Grosses Dollar-Zeichen -->
+                    <Label x:Name="DollarSign"
+                           Text="$" 
+                           FontSize="160" 
+                           FontAttributes="Bold"
+                           TextColor="#512BD4"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center"/>
+                </Grid>
+            </Border>
+        </Grid>
+        
+        <!-- App-Name -->
+        <VerticalStackLayout Grid.Row="2" Spacing="10" VerticalOptions="End" Margin="0,0,0,50">
+            <Label x:Name="AppTitle"
+                   Text="Taschengeld" 
+                   FontSize="36" 
+                   FontAttributes="Bold"
+                   TextColor="White"
+                   HorizontalOptions="Center"
+                   Opacity="0"/>
+            
+            <Label x:Name="LoadingText"
+                   Text="Wird geladen..." 
+                   FontSize="14"
+                   TextColor="#E8EAF6"
+                   HorizontalOptions="Center"
+                   Opacity="0"/>
+            
+            <!-- Lade-Animation -->
+            <ActivityIndicator x:Name="LoadingIndicator"
+                               IsRunning="True"
+                               Color="White"
+                               HorizontalOptions="Center"/>
+        </VerticalStackLayout>
+        
+    </Grid>
+    
+</ContentPage>

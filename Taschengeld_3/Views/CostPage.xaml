@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:behaviors="clr-namespace:Taschengeld_3.Behaviors"
              x:Class="Taschengeld_3.Views.CostPage"
              Title="Gehalt">
 
@@ -15,6 +16,9 @@
                     <StackLayout Grid.Column="0" Spacing="2">
                         <Label Text="Ansicht" FontSize="10" FontAttributes="Bold"/>
                         <Picker x:Name="ViewModePicker" BackgroundColor="White">
+                            <Picker.Behaviors>
+                                <behaviors:PickerHapticBehavior/>
+                            </Picker.Behaviors>
                             <Picker.Items>
                                 <x:String>Woechentlich</x:String>
                                 <x:String>Monatlich</x:String>
@@ -24,7 +28,11 @@
                     
                     <StackLayout Grid.Column="1" Spacing="2">
                         <Label Text="Aufgabe (optional)" FontSize="10" FontAttributes="Bold"/>
-                        <Picker ItemsSource="{Binding AvailableTasks}" SelectedItem="{Binding SelectedTask}" ItemDisplayBinding="{Binding Name}" BackgroundColor="White"/>
+                        <Picker ItemsSource="{Binding AvailableTasks}" SelectedItem="{Binding SelectedTask}" ItemDisplayBinding="{Binding Name}" BackgroundColor="White">
+                            <Picker.Behaviors>
+                                <behaviors:PickerHapticBehavior/>
+                            </Picker.Behaviors>
+                        </Picker>
                     </StackLayout>
                 </Grid>
                 
@@ -32,16 +40,24 @@
                 <Grid ColumnDefinitions="*,*" ColumnSpacing="10" RowSpacing="0">
                     <StackLayout Grid.Column="0" Spacing="2">
                         <Label Text="Jahr" FontSize="10" FontAttributes="Bold"/>
-                        <Picker ItemsSource="{Binding Years}" SelectedItem="{Binding SelectedYear}" BackgroundColor="White"/>
+                        <Picker ItemsSource="{Binding Years}" SelectedItem="{Binding SelectedYear}" BackgroundColor="White">
+                            <Picker.Behaviors>
+                                <behaviors:PickerHapticBehavior/>
+                            </Picker.Behaviors>
+                        </Picker>
                     </StackLayout>
                     
                     <StackLayout Grid.Column="1" Spacing="2">
                         <Label Text="Monat" FontSize="10" FontAttributes="Bold"/>
-                        <Picker x:Name="MonthPicker" ItemsSource="{Binding Months}" SelectedItem="{Binding SelectedMonth}" BackgroundColor="White"/>
+                        <Picker x:Name="MonthPicker" ItemsSource="{Binding Months}" SelectedItem="{Binding SelectedMonth}" BackgroundColor="White">
+                            <Picker.Behaviors>
+                                <behaviors:PickerHapticBehavior/>
+                            </Picker.Behaviors>
+                        </Picker>
                     </StackLayout>
                 </Grid>
                 
-                <Button Text="Aktualisieren" Clicked="OnLoadCosts" BackgroundColor="#2196F3" TextColor="White" Padding="8" FontSize="12"/>
+                <Button Text="Aktualisieren" Clicked="OnLoadCosts" BackgroundColor="#2196F3" TextColor="White" Padding="10" FontSize="14" FontAttributes="Bold"/>
             </StackLayout>
         </ScrollView>
 
@@ -49,38 +65,42 @@
         <CollectionView Grid.Row="1" ItemsSource="{Binding CostSummaries}">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <SwipeView>
-                        <SwipeView.RightItems>
-                            <SwipeItems Mode="Reveal">
-                                <SwipeItem Text="Teilen" 
-                                           IconImageSource="share.png"
-                                           Invoked="OnShareEntry" 
-                                           CommandParameter="{Binding .}" 
-                                           BackgroundColor="#2196F3"/>
-                            </SwipeItems>
-                        </SwipeView.RightItems>
-                        
-                        <Frame BorderColor="#E0E0E0" Padding="8" Margin="0,2" CornerRadius="8" BackgroundColor="White" HasShadow="False">
-                            <VerticalStackLayout Spacing="3">
-                                <Label Text="{Binding Period}" FontSize="13" FontAttributes="Bold" TextColor="Black"/>
+                    <Frame BorderColor="#E0E0E0" Padding="8" Margin="0,3" CornerRadius="8" BackgroundColor="White" HasShadow="False">
+                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                            <VerticalStackLayout Grid.Column="0" Spacing="3">
+                                <Label Text="{Binding Period}" FontSize="14" FontAttributes="Bold" TextColor="Black"/>
                                 <StackLayout Orientation="Horizontal" Spacing="15">
-                                    <Label Text="{Binding TotalCost, StringFormat='Verdienst: {0:C}'}" FontSize="11" TextColor="#4CAF50" FontAttributes="Bold"/>
-                                    <Label Text="{Binding EntryCount, StringFormat='Eintraege: {0}'}" FontSize="11" TextColor="Gray"/>
+                                    <Label Text="{Binding TotalCost, StringFormat='Verdienst: {0:C}'}" FontSize="12" TextColor="#4CAF50" FontAttributes="Bold"/>
+                                    <Label Text="{Binding EntryCount, StringFormat='Einträge: {0}'}" FontSize="12" TextColor="Gray"/>
                                 </StackLayout>
                                 
                                 <CollectionView ItemsSource="{Binding TaskCosts}" SelectionMode="None">
                                     <CollectionView.ItemTemplate>
                                         <DataTemplate>
                                             <Grid ColumnDefinitions="*,Auto" Padding="0" RowSpacing="0">
-                                                <Label Grid.Column="0" Text="{Binding TaskName}" FontSize="10" TextColor="Gray"/>
-                                                <Label Grid.Column="1" Text="{Binding Cost, StringFormat='{0:C}'}" FontSize="10" FontAttributes="Bold" TextColor="Gray"/>
+                                                <Label Grid.Column="0" Text="{Binding TaskName}" FontSize="11" TextColor="Gray"/>
+                                                <Label Grid.Column="1" Text="{Binding Cost, StringFormat='{0:C}'}" FontSize="11" FontAttributes="Bold" TextColor="Gray"/>
                                             </Grid>
                                         </DataTemplate>
                                     </CollectionView.ItemTemplate>
                                 </CollectionView>
                             </VerticalStackLayout>
-                        </Frame>
-                    </SwipeView>
+                            
+                            <!-- Teilen Button -->
+                            <Button Grid.Column="1" 
+                                    Text="📤" 
+                                    FontSize="18"
+                                    Clicked="OnShareEntry" 
+                                    CommandParameter="{Binding .}" 
+                                    BackgroundColor="#512BD4" 
+                                    TextColor="White" 
+                                    WidthRequest="45" 
+                                    HeightRequest="45" 
+                                    Padding="0"
+                                    CornerRadius="8"
+                                    VerticalOptions="Center"/>
+                        </Grid>
+                    </Frame>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>

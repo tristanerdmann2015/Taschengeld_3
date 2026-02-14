@@ -268,10 +268,10 @@ public class TimeEntryViewModel : INotifyPropertyChanged
                 }
                 message += "\nMöchten Sie diese Einträge löschen?";
 
-                var confirm = await Application.Current!.MainPage!.DisplayAlert(
-                    "Ungültige Zeiteinträge",
+                var confirm = await DialogService.DisplayConfirmAsync(
+                    "Ungueltige Zeiteintraege",
                     message,
-                    "Ja, löschen",
+                    "Ja, loeschen",
                     "Nein, behalten");
 
                 if (confirm)
@@ -388,7 +388,7 @@ public class TimeEntryViewModel : INotifyPropertyChanged
     {
         if (SelectedTask == null)
         {
-            await Application.Current!.MainPage!.DisplayAlert("Fehler", "Bitte wählen Sie eine Aufgabe aus.", "OK");
+            await DialogService.DisplayAlertAsync("Fehler", "Bitte waehlen Sie eine Aufgabe aus.", "OK");
             return;
         }
 
@@ -410,8 +410,8 @@ public class TimeEntryViewModel : INotifyPropertyChanged
     {
         if (SelectedEntry == null) return;
 
-        var confirm = await Application.Current!.MainPage!.DisplayAlert("Bestätigung",
-            "Möchten Sie diesen Eintrag wirklich löschen?", "Ja", "Nein");
+        var confirm = await DialogService.DisplayConfirmAsync("Bestaetigung",
+            "Moechten Sie diesen Eintrag wirklich loeschen?", "Ja", "Nein");
 
         if (confirm)
         {

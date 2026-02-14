@@ -170,13 +170,13 @@ public class TaskViewModel : INotifyPropertyChanged
         
         if (string.IsNullOrWhiteSpace(TaskName))
         {
-            await Application.Current!.MainPage!.DisplayAlert("Fehler", "Bitte geben Sie einen Namen ein.", "OK");
+            await DialogService.DisplayAlertAsync("Fehler", "Bitte geben Sie einen Namen ein.", "OK");
             return;
         }
 
         if (TaskPrice <= 0)
         {
-            await Application.Current!.MainPage!.DisplayAlert("Fehler", "Bitte geben Sie einen gültigen Preis ein.", "OK");
+            await DialogService.DisplayAlertAsync("Fehler", "Bitte geben Sie einen gueltigen Preis ein.", "OK");
             return;
         }
 
@@ -234,7 +234,7 @@ public class TaskViewModel : INotifyPropertyChanged
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"SaveTask Exception: {ex.GetType().Name}: {ex.Message}\n{ex.StackTrace}");
-            await Application.Current!.MainPage!.DisplayAlert("Fehler beim Speichern", ex.Message, "OK");
+            await DialogService.DisplayAlertAsync("Fehler beim Speichern", ex.Message, "OK");
         }
     }
 
@@ -251,8 +251,8 @@ public class TaskViewModel : INotifyPropertyChanged
         
         System.Diagnostics.Debug.WriteLine($"DeleteTask: About to delete task Id={taskId}, Name='{taskName}'");
 
-        var confirm = await Application.Current!.MainPage!.DisplayAlert("Bestätigung", 
-            $"Möchten Sie die Aufgabe '{taskName}' wirklich löschen?", "Ja", "Nein");
+        var confirm = await DialogService.DisplayConfirmAsync("Bestaetigung", 
+            $"Moechten Sie die Aufgabe '{taskName}' wirklich loeschen?", "Ja", "Nein");
 
         if (confirm)
         {
@@ -270,7 +270,7 @@ public class TaskViewModel : INotifyPropertyChanged
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"DeleteTask Exception: {ex.GetType().Name}: {ex.Message}\n{ex.StackTrace}");
-                await Application.Current!.MainPage!.DisplayAlert("Fehler beim Löschen", ex.Message, "OK");
+                await DialogService.DisplayAlertAsync("Fehler beim Loeschen", ex.Message, "OK");
             }
         }
         else

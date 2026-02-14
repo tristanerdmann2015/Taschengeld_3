@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Plugin.Maui.Audio;
 using Taschengeld_3.Services;
 using Taschengeld_3.ViewModels;
 using Taschengeld_3.Views;
@@ -18,8 +19,13 @@ namespace Taschengeld_3
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
 
+            // Register Audio Plugin
+            builder.Services.AddSingleton(AudioManager.Current);
+
             // Register Services
             builder.Services.AddSingleton<DatabaseService>();
+            builder.Services.AddSingleton<SoundService>();
+            builder.Services.AddSingleton<PdfService>();
             builder.Services.AddSingleton<TaskViewModel>();
             builder.Services.AddSingleton<TimeEntryViewModel>();
             builder.Services.AddSingleton<CostViewModel>();
